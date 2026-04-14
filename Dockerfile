@@ -21,18 +21,14 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copier les fichiers de dépendances en premier (cache Docker)
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-autoloader
-
-COPY package.json package-lock.json ./
-RUN npm install --no-audit --no-fund
-
-# Copier le reste du projet
+# Copier tout le projet d'abord
 COPY . .
 
-# Finaliser Composer + build Vite
-RUN composer dump-autoload --optimize \
+# Installer les dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
+
+# Installer les dépendances Node et builder les assets
+RUN npm install --legacy-peer-deps --no-audit --no-fund \
     && npm run build \
     && rm -rf node_modules
 
