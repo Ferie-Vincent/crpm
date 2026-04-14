@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
         mbstring exif pcntl bcmath gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Node.js 20
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+# Node.js 22
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs && apt-get clean
 
 # Composer
@@ -26,7 +26,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-autoloader
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install --no-audit --no-fund
 
 # Copier le reste du projet
 COPY . .
