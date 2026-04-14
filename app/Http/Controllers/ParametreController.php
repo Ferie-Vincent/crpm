@@ -199,6 +199,17 @@ class ParametreController extends Controller
         return back()->with('success', 'Pays supprimé.');
     }
 
+    public function selectPays(Request $request)
+    {
+        $paysId = $request->input('pays_id');
+        if ($paysId) {
+            $request->session()->put('selected_pays_id', (int) $paysId);
+        } else {
+            $request->session()->forget('selected_pays_id');
+        }
+        return back();
+    }
+
     private function sectionCompletion(?int $paysId, array $cles): int
     {
         if (!$paysId) return 0;

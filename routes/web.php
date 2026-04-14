@@ -12,21 +12,11 @@ use App\Http\Controllers\MissionTerrainController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::redirect('/', '/login');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Sélection du pays actif (admin)
-    Route::post('/select-pays', function (\Illuminate\Http\Request $request) {
-        $paysId = $request->input('pays_id');
-        if ($paysId) {
-            $request->session()->put('selected_pays_id', (int) $paysId);
-        } else {
-            $request->session()->forget('selected_pays_id');
-        }
-        return back();
-    })->name('select-pays');
+    Route::post('/select-pays', [ParametreController::class, 'selectPays'])->name('select-pays');
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
