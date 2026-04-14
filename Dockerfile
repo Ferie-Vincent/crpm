@@ -28,7 +28,9 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Installer les dépendances Node et builder les assets
-RUN npm install --legacy-peer-deps --no-audit --no-fund \
+# On supprime le lock file pour forcer une résolution propre sans @tailwindcss/vite v4
+RUN rm -f package-lock.json \
+    && npm install --legacy-peer-deps --no-audit --no-fund \
     && npm run build \
     && rm -rf node_modules
 
